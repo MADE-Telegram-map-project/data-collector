@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  database:
+    image: postgres:13.4
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${DB_USER}"]
+      interval: 6s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      TZ: Europe/Moscow
+    volumes: 
+      - postgres-db-volume:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    ports:
+      - '${DB_PORT:-5432}:5432'
+
+  mqueue:
+    image: rabbitmq:3.9.7-management
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASS}
+    ports:
+      - '${RABBITMQ_MONITORING_PORT:-15672}:15672'
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
+
+volumes:
+  postgres-db-volume:
+  rabbitmq-data:
