@@ -11,9 +11,11 @@
 
 Достаточно выполнить:
 ```
-docker-compose up
+docker-compose up --build
 ```
+
+Пример с доступом к СУБД только для целей демонстрации.
 
 СУБД доступна по порту `DB_PORT` на localhost.
 
-Интерфейс для RabbitMQ по [http://localhost:15672/](http://localhost:15672/). Пор зависит от `RABBITMQ_MONITORING_PORT`/
+Интерфейс для RabbitMQ по [http://localhost:15672/](http://localhost:15672/). Пор зависит от `RABBITMQ_MONITORING_PORT`.
