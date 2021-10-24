@@ -37,10 +37,9 @@ jobs:
         fetch-depth: 0
         
     - name: Lint Code Base
-      uses: github/super-linter@v4
+      uses: github/super-linter/slim@v4
       env:
         VALIDATE_ALL_CODEBASE: false
         DISABLE_ERRORS: true
         DEFAULT_BRANCH: develop
-        PYTHON_PYLINT_CONFIG_FILE: .pylintrc
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
