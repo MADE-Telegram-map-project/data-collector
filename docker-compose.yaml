@@ -28,10 +28,10 @@ services:
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
 
-  db_test:
-    image: test
+  db_seed:
+    image: ${REGISTRY_URL}database-seed
     build:
-      context: ./producer
+      context: ./db_init
     environment:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
