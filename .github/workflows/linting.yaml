@@ -1,0 +1,45 @@
+name: Linting
+
+on:
+  push:
+    branches: [ master, develop ]
+    paths:
+      - '**.sql'
+      - '**.py'
+      - '**/Dockerfile'
+      - '**/requirements*.txt'
+      - '**/.github/**.yaml'
+  pull_request:
+    branches: [ master, develop ]
+    paths:
+      - '**.sql'
+      - '**.py'
+      - '**/Dockerfile'
+      - '**/requirements*.txt'
+      - '**/.github/**.yaml'
+
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Lint with superlinter
+    runs-on: ubuntu-20.04
+    
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        
+    - name: Lint Code Base
+      uses: github/super-linter/slim@v4
+      env:
+        VALIDATE_ALL_CODEBASE: false
+        DISABLE_ERRORS: true
+        DEFAULT_BRANCH: develop
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
