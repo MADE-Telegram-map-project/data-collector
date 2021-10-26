@@ -29,16 +29,17 @@ LINK_KEY = "link"
 
 
 def wait(n_sec: int = None):
-    n_sec = n_sec or random.random() * 1
+    n_sec = n_sec or random.random() * 3
     sleep(n_sec)
 
 
-def get_channel_id(client, channel_link: str) -> int:
+def get_channel_id(client: TelegramClient, channel_link: str) -> int:
     """ get id of @channel_link """
     try:
         assert isinstance(channel_link, str)
-        full = client(GetFullChannelRequest(channel=channel_link))
-        idx = full.full_chat.id
+        entity = client.get_input_entity(channel_link)
+        idx = entity.channel_id
+
     except Exception as e:
         # some channels in csv are not exist or renamed already
         print(e, file=sys.stderr)
