@@ -1,0 +1,9 @@
+database:
+  user: ${oc.env:DB_USER}
+  passw: ${oc.env:DB_PASS}
+  database: ${oc.env:DB_DATABASE}
+  host: ${oc.env:DB_HOST,database}
+  port: ${oc.env:DB_PORT,5432}
+  db_url: postgresql://${.user}:${.passw}@${.host}:${.port}/${.database}
+
+sql_ddl_path: ./ddl/init-db.sql
