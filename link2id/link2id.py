@@ -1,17 +1,16 @@
 """Convert Telegram link to channel id"""
 
-from typing import Iterable, List, Optional
+from typing import List, Optional
 import random
 import sys
 from time import sleep
 import csv
 import os
 import argparse
-import threading
-import queue
 
 from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import GetFullChannelRequest
+from telethon import errors
 import tqdm
 
 # api_hash from https://my.telegram.org, under API Development.
@@ -39,7 +38,8 @@ def get_channel_id(client: TelegramClient, channel_link: str) -> int:
         assert isinstance(channel_link, str)
         entity = client.get_input_entity(channel_link)
         idx = entity.channel_id
-
+    except errors.FloodWaitError:
+        raise
     except Exception as e:
         # some channels in csv are not exist or renamed already
         print(e, file=sys.stderr)
@@ -87,10 +87,20 @@ def main(args):
         if write_header:
             writer.writeheader()
 
+        request_count = 1
+
         for link in tqdm.tqdm(links):
-            chanenl_id = link2id(client, link)
+            try:
+                chanenl_id = link2id(client, link)
+            except errors.FloodError as e:
+                print(f"FloodError Wait {e.seconds}")
+                wait(e.seconds)
+            request_count += 1
             if chanenl_id is not None:
                 writer.writerow({LINK_KEY: link, CHANNEL_KEY: str(chanenl_id)})
+            if request_count % 20 == 0:
+                wait(10)
+                request_count = 1
             wait()
 
 
