@@ -13,7 +13,6 @@ services:
       TZ: Europe/Moscow
     volumes: 
       - postgres-db-volume:/var/lib/postgresql/data
-      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
     ports:
       - '${DB_PORT:-5432}:5432'
 
@@ -35,9 +34,8 @@ services:
     environment:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
-      DB_HOST: database
-      DB_PORT: '5432'
       DB_DATABASE: ${DB_USER}
+      DB_HOST: database
     depends_on:
       database:
         condition: service_healthy

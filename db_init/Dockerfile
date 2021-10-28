@@ -14,9 +14,7 @@ RUN --mount=type=cache,id=pip-cache,target=/root/.cache/pip pip install -r ./req
 
 FROM python:${PYTHON_VERSION}-slim
 
-ARG TZ="Europe/Moscow"
-
-RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+ENV TZ="Europe/Moscow"
 
 RUN apt update && \
     apt install -y --no-install-recommends libpq5 && \
@@ -28,6 +26,12 @@ ENV PATH=/opt/venv/bin:${PATH}
 
 WORKDIR /home/app
 
+COPY ./ddl ./ddl
+
+COPY ./config.yaml ./
+
+COPY ./db_seed ./db_seed
+
 COPY ./main.py ./
 
-CMD python ./main.py
+CMD python ./main.py -c ./config.yaml
