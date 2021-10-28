@@ -28,7 +28,7 @@ LINK_KEY = "link"
 
 
 def wait(n_sec: int = None):
-    n_sec = n_sec or random.random() * 3
+    n_sec = n_sec or random.randint(40, 180)
     sleep(n_sec)
 
 
