@@ -56,6 +56,8 @@ CREATE TABLE IF NOT EXISTS "UserChannel" (
     -- complex primary key
     "channel_id" bigint NOT NULL,
     "user_id" bigint NOT NULL,
+    "is_bot" bool DEFAULT false,
+    "username" text NULL,
     CONSTRAINT "pk_UserChannel" PRIMARY KEY ("channel_id", "user_id"),
     FOREIGN KEY ("channel_id") REFERENCES "Channels" ("channel_id") ON DELETE CASCADE
 );

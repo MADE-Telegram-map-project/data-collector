@@ -1,14 +1,22 @@
 import argparse
 from urllib.parse import urlparse
 from collections import namedtuple
+import csv
+import os
+import logging
 
-import psycopg2
 from psycopg2 import sql
 from omegaconf import OmegaConf
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
 
 from db_seed import AppConfigSchema
+from db_seed.db import ChannelQueue
+
+LOGGER = logging.getLogger()
 
 DbCredentials = namedtuple("TemplateInfo", ["username", "password", "database", "hostname", "port"])
+
 
 def parse_db_url(url: str) -> DbCredentials:
     result = urlparse(url)
@@ -21,31 +29,60 @@ def parse_db_url(url: str) -> DbCredentials:
 
     return DbCredentials(username, password, database, hostname, port)
 
-def drop_tables(connection):
-    with connection.cursor() as cur:
-        cur.execute("SELECT tablename FROM pg_tables WHERE schemaname = %s", ("public",))
-        records = cur.fetchall()
 
-        for table_name in records:
-            cur.execute(sql.SQL("DROP TABLE {0} CASCADE").format(sql.Identifier(table_name[0])))
+def drop_tables(session):
+    records = session.execute(
+        "SELECT tablename FROM pg_tables WHERE schemaname = %s", ("public",)).all()
+
+    for table_name in records:
+        session.execute(sql.SQL("DROP TABLE {0} CASCADE").format(sql.Identifier(table_name[0])))
 
 
 def main(config: AppConfigSchema):
 
-    result = parse_db_url(config.database.db_url)
+    if not os.path.isfile(config.path_to_init_csv):
+        raise ValueError("You need to specify file with init id of channels")
 
-    with psycopg2.connect(database=result.database, user=result.username,
-                          password=result.password, host=result.hostname, port=result.port) as conn:
+    channel_id_col = config.channel_id_key
 
+    engine = create_engine(config.database.db_url)
+
+    Session = sessionmaker(bind=engine)
+
+    inserted = 0
+    batch_size = 10
+
+    with Session() as session:
         if config.database.drop_tables:
-            with conn.cursor() as cur:
-                drop_tables(conn)
-                conn.commit()
+            LOGGER.info("Drop tables")
+            drop_tables(session)
+            session.commit()
 
         with open(config.sql_ddl_path, "r", encoding="utf-8") as file:
-            with conn.cursor() as cur:
-                cur.execute(file.read())
-                conn.commit()
+            LOGGER.info("Init DDL")
+            session.execute(file.read())
+            session.commit()
+
+        with open(config.path_to_init_csv, "r", encoding="utf-8", newline="") as file:
+            reader = csv.DictReader(file)
+            _ = reader.fieldnames
+
+            for line in reader:
+                channel_id = int(line[channel_id_col])
+
+                if session.query(ChannelQueue).filter(ChannelQueue.channel_id == channel_id).first() is None:
+                    LOGGER.debug("Add channel_id %d to insert batch", channel_id)
+                    session.add(ChannelQueue(channel_id=channel_id, status="to_process"))
+                    inserted += 1
+                    if inserted % batch_size == 0:
+                        LOGGER.debug("Add channel_id %d to insert batch", channel_id)
+                        session.commit()
+                else:
+                    LOGGER.debug("Channel id %d already exist skip it", channel_id)
+
+            session.commit()
+
+        LOGGER.info("Insert %d records", inserted)
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from typing import Any, Optional, List
+from dataclasses import dataclass
+from typing import Optional
 from omegaconf import MISSING
 
 
@@ -13,7 +13,10 @@ class DbConfigSchema:
     db_url: str = MISSING
     drop_tables: bool = False
 
+
 @ dataclass
 class AppConfigSchema:
     database: DbConfigSchema = MISSING
     sql_ddl_path: str = MISSING
+    path_to_init_csv: str = MISSING
+    channel_id_key: str = "channel_id"
