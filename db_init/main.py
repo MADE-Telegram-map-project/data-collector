@@ -68,17 +68,18 @@ def main(config: AppConfigSchema):
             _ = reader.fieldnames
 
             for line in reader:
-                channel_id = int(line[channel_id_col])
+                channel_link = line[channel_id_col]
+                channel_link = channel_link.replace("@", "")
 
-                if session.query(ChannelQueue).filter(ChannelQueue.channel_id == channel_id).first() is None:
-                    LOGGER.debug("Add channel_id %d to insert batch", channel_id)
-                    session.add(ChannelQueue(channel_id=channel_id, status="to_process"))
+                if session.query(ChannelQueue).filter(ChannelQueue.channel_link == channel_link).first() is None:
+                    LOGGER.debug("Add channel_id %d to insert batch", channel_link)
+                    session.add(ChannelQueue(channel_link=channel_link, status="to_process"))
                     inserted += 1
                     if inserted % batch_size == 0:
-                        LOGGER.debug("Add channel_id %d to insert batch", channel_id)
+                        LOGGER.debug("Add channel_id %d to insert batch", channel_link)
                         session.commit()
                 else:
-                    LOGGER.debug("Channel id %d already exist skip it", channel_id)
+                    LOGGER.debug("Channel id %d already exist skip it", channel_link)
 
             session.commit()
 
