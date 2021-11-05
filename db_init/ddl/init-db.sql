@@ -62,10 +62,12 @@ CREATE TABLE IF NOT EXISTS "UserChannel" (
     FOREIGN KEY ("channel_id") REFERENCES "Channels" ("channel_id") ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS "ChannelRelation"(
-    "from_channel_link" TEXT NOT NULL,
-    "to_channel_link" TEXT NOT NULL,
-    CONSTRAINT "pk_ChannelRelation" PRIMARY KEY ("from_channel_link", "to_channel_link")
+CREATE TABLE IF NOT EXISTS "ChannelRelation" (
+    "rel_id" SERIAL,
+    "from_channel_id" bigint NOT NULL,
+    "to_channel_link" TEXT NULL,
+    "to_channel_id" bigint NULL,
+    CONSTRAINT "pk_ChannelRelation" PRIMARY KEY ("rel_id")
 );
 
 DO $$ BEGIN IF NOT EXISTS (
@@ -82,8 +84,12 @@ END IF;
 END $$;
 
 CREATE TABLE IF NOT EXISTS "ChannelQueue" (
-    "link" TEXT NOT NULL,
+    "queue_id" SERIAL,
+    "channel_id" bigint NULL,
+    "link" TEXT NULL,
     -- enum ok, error, to_process, processing
     "status" processing_status NOT NULL DEFAULT 'to_process',
-    CONSTRAINT "pk_ChannelQueue" PRIMARY KEY ("link")
+    CONSTRAINT "pk_ChannelQueue" PRIMARY KEY ("queue_id"),
+    CONSTRAINT "uniq_id_ChannelQueue" UNIQUE ("channel_id"),
+    CONSTRAINT "uniq_link_ChannelQueue" UNIQUE ("link")
 );
