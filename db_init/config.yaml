@@ -7,3 +7,4 @@ database:
   db_url: postgresql://${.user}:${.passw}@${.host}:${.port}/${.database}
 
 sql_ddl_path: ./ddl/init-db.sql
+path_to_init_csv: ./data/channel_id.csv

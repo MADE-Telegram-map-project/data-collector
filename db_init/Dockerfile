@@ -28,10 +28,14 @@ WORKDIR /home/app
 
 COPY ./ddl ./ddl
 
-COPY ./config.yaml ./
+COPY ./config.yaml ./log_config.yaml ./
+
+COPY ./data ./data
 
 COPY ./db_seed ./db_seed
 
 COPY ./main.py ./
+
+ENV LOG_CONFIG=./log_config.yaml
 
 CMD python ./main.py -c ./config.yaml
