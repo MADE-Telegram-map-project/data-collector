@@ -29,7 +29,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
 
   db_seed:
-    image: ${REGISTRY_URL}database-seed
+    image: ${REGISTRY_URL}database-seed:develop
     build:
       context: ./db_init
     environment:
@@ -40,7 +40,19 @@ services:
     depends_on:
       database:
         condition: service_healthy
-
+   
+  producer:
+    image: ${REGISTRY_URL}producer:develop
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_DATABASE: ${DB_USER}
+      DB_LOCAL: database
+      RABBIT_MQ_URL: 'amqp://${RABBIT_MQ_USER}:${RABBIT_MQ_PASS}@mqueue:5672'
+    depends_on:
+      database:
+        condition: service_healthy
+    
 volumes:
   postgres-db-volume:
   rabbitmq-data:
