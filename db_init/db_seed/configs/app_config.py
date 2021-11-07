@@ -19,4 +19,4 @@ class AppConfigSchema:
     database: DbConfigSchema = MISSING
     sql_ddl_path: str = MISSING
     path_to_init_csv: str = MISSING
-    channel_id_key: str = "channel_id"
+    channel_id_key: str = "link"

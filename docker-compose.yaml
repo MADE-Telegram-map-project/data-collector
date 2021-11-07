@@ -24,6 +24,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASS}
     ports:
       - '${RABBITMQ_MONITORING_PORT:-15672}:15672'
+      - '${RABBITMQ_PORT:-5672}:5672'
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq/mnesia/rabbit@rabbitmq
 
