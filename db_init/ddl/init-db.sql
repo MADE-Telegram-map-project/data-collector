@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS "Channels" (
     CONSTRAINT "pk_channels" PRIMARY KEY ("channel_id")
 );
 
+
 CREATE TABLE IF NOT EXISTS "Messages" (
     "message_id" bigint NOT NULL,
     "channel_id" bigint NOT NULL,
@@ -52,6 +53,9 @@ CREATE TABLE IF NOT EXISTS "Replies" (
     FOREIGN KEY ("message_id", "channel_id") REFERENCES "Messages" ("message_id", "channel_id") ON DELETE CASCADE
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_Replies_meesage" ON "Replies" ("id", "message_id", "channel_id");
+
+
 CREATE TABLE IF NOT EXISTS "UserChannel" (
     -- complex primary key
     "channel_id" bigint NOT NULL,
@@ -69,6 +73,8 @@ CREATE TABLE IF NOT EXISTS "ChannelRelation" (
     "to_channel_id" bigint NULL,
     CONSTRAINT "pk_ChannelRelation" PRIMARY KEY ("rel_id")
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS "idx_ChannelRelation_complex" ON "ChannelRelation" ("from_channel_id", "to_channel_link", "to_channel_id");
 
 DO $$ BEGIN IF NOT EXISTS (
     SELECT
