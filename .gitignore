@@ -132,3 +132,5 @@ links2ids_process.session
 session_name.session
 
 data/ids.csv
+sessions/
+.env
