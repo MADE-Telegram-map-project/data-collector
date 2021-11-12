@@ -1,5 +1,9 @@
 version: "3.7"
 
+x-tg-client: &tg-client
+  image: ${REGISTRY_URL}tg-client:dev
+  restart: always
+
 services:
   database:
     image: postgres:13.4
@@ -8,8 +12,8 @@ services:
       interval: 6s
       retries: 5
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER:?}
+      POSTGRES_PASSWORD: ${DB_PASS:?}
       TZ: Europe/Moscow
     volumes: 
       - postgres-db-volume:/var/lib/postgresql/data
@@ -20,8 +24,8 @@ services:
     image: rabbitmq:3.9.7-management
     hostname: rabbitmq
     environment:
-      - RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASS}
+      - RABBITMQ_DEFAULT_USER=${RABBIT_MQ_USER:?}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_MQ_PASS:?}
     ports:
       - '${RABBITMQ_MONITORING_PORT:-15672}:15672'
       - '${RABBITMQ_PORT:-5672}:5672'
@@ -43,6 +47,7 @@ services:
    
   producer:
     image: ${REGISTRY_URL}producer:develop
+    restart: always
     environment:
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
@@ -50,13 +55,35 @@ services:
       DB_LOCAL: database
       RABBIT_MQ_URL: 'amqp://${RABBIT_MQ_USER}:${RABBIT_MQ_PASS}@mqueue:5672'
     depends_on:
-      database:
-        condition: service_healthy
       mqueue:
         condition: service_started
       db_seed:
         condition: service_completed_successfully
-    
+
+  tg-client1:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_1:?}
+      - API_ID=${API_ID_1:?}
+      - API_HASH=${API_HASH_1:?}
+      - PHONE=null
+      - RABBIT_MQ_INPUT_QUEUE=${INPUT_QUEUE:?}
+      - RABBIT_MQ_USER=${RABBIT_MQ_USER}
+      - RABBIT_MQ_PASS=${RABBIT_MQ_PASS}
+      - RABBIT_MQ_HOST=mqueue
+      - RABBIT_MQ_PORT=5672
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_1}.session:/home/app/${SESSION_1}.session
+    depends_on:
+      mqueue:
+        condition: service_started
+      db_seed:
+        condition: service_completed_successfully
+
+
 volumes:
   postgres-db-volume:
   rabbitmq-data:
