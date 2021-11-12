@@ -66,11 +66,27 @@ CREATE TABLE IF NOT EXISTS "UserChannel" (
     FOREIGN KEY ("channel_id") REFERENCES "Channels" ("channel_id") ON DELETE CASCADE
 );
 
+
+DO $$ BEGIN IF NOT EXISTS (
+    SELECT
+        1
+    FROM
+        pg_type
+    WHERE
+        typname = 'link_type'
+) THEN CREATE TYPE link_type AS ENUM ('header', 'forward', 'direct');
+
+END IF;
+
+END $$;
+
+
 CREATE TABLE IF NOT EXISTS "ChannelRelation" (
     "rel_id" SERIAL,
     "from_channel_id" bigint NOT NULL,
     "to_channel_link" TEXT NULL,
     "to_channel_id" bigint NULL,
+    "link_type" link_type NOT NULL,
     CONSTRAINT "pk_ChannelRelation" PRIMARY KEY ("rel_id")
 );
 
@@ -88,6 +104,8 @@ DO $$ BEGIN IF NOT EXISTS (
 END IF;
 
 END $$;
+
+
 
 CREATE TABLE IF NOT EXISTS "ChannelQueue" (
     "queue_id" SERIAL,
