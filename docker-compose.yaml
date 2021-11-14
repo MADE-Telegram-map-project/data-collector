@@ -50,7 +50,132 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+   
+  tg-client2:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_2:?}
+      - API_ID=${API_ID_2:?}
+      - API_HASH=${API_HASH_2:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_2}.session:/home/app/${SESSION_2}.session
+      - ./logs/${SESSION_2}:/home/app/logs
+      - ./data/${SESSION_2}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
 
+  tg-client3:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_3:?}
+      - API_ID=${API_ID_3:?}
+      - API_HASH=${API_HASH_3:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_3}.session:/home/app/${SESSION_3}.session
+      - ./logs/${SESSION_3}:/home/app/logs
+      - ./data/${SESSION_3}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client4:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_4:?}
+      - API_ID=${API_ID_4:?}
+      - API_HASH=${API_HASH_4:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_4}.session:/home/app/${SESSION_4}.session
+      - ./logs/${SESSION_4}:/home/app/logs
+      - ./data/${SESSION_4}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client5:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_5:?}
+      - API_ID=${API_ID_5:?}
+      - API_HASH=${API_HASH_5:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_5}.session:/home/app/${SESSION_5}.session
+      - ./logs/${SESSION_5}:/home/app/logs
+      - ./data/${SESSION_5}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client6:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_6:?}
+      - API_ID=${API_ID_6:?}
+      - API_HASH=${API_HASH_6:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_6}.session:/home/app/${SESSION_6}.session
+      - ./logs/${SESSION_6}:/home/app/logs
+      - ./data/${SESSION_6}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client7:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_7:?}
+      - API_ID=${API_ID_7:?}
+      - API_HASH=${API_HASH_7:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_7}.session:/home/app/${SESSION_7}.session
+      - ./logs/${SESSION_7}:/home/app/logs
+      - ./data/${SESSION_7}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client8:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_8:?}
+      - API_ID=${API_ID_8:?}
+      - API_HASH=${API_HASH_8:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_8}.session:/home/app/${SESSION_8}.session
+      - ./logs/${SESSION_8}:/home/app/logs
+      - ./data/${SESSION_8}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
 
 volumes:
   postgres-db-volume:
