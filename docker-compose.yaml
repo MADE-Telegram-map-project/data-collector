@@ -176,6 +176,60 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+   
+  tg-client9:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_9:?}
+      - API_ID=${API_ID_9:?}
+      - API_HASH=${API_HASH_9:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_9}.session:/home/app/${SESSION_9}.session
+      - ./logs/${SESSION_9}:/home/app/logs
+      - ./data/${SESSION_9}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client10:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_10:?}
+      - API_ID=${API_ID_10:?}
+      - API_HASH=${API_HASH_10:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_10}.session:/home/app/${SESSION_10}.session
+      - ./logs/${SESSION_10}:/home/app/logs
+      - ./data/${SESSION_10}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
+   
+  tg-client12:
+    <<: *tg-client
+    environment:
+      - SESSION=${SESSION_12:?}
+      - API_ID=${API_ID_12:?}
+      - API_HASH=${API_HASH_12:?}
+      - PHONE=null
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASS=${DB_PASS}
+      - POSTGRES_HOST=database
+    volumes:
+      - ./sessions/${SESSION_12}.session:/home/app/${SESSION_12}.session
+      - ./logs/${SESSION_12}:/home/app/logs
+      - ./data/${SESSION_12}:/home/app/data
+    depends_on:
+      db_seed:
+        condition: service_completed_successfully
 
 volumes:
   postgres-db-volume:
