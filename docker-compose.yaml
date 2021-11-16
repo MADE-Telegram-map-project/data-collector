@@ -50,6 +50,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client2:
     <<: *tg-client
@@ -68,6 +70,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
 
   tg-client3:
     <<: *tg-client
@@ -86,6 +90,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client4:
     <<: *tg-client
@@ -104,6 +110,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client5:
     <<: *tg-client
@@ -122,6 +130,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client6:
     <<: *tg-client
@@ -140,6 +150,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client7:
     <<: *tg-client
@@ -158,6 +170,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client8:
     <<: *tg-client
@@ -176,6 +190,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client9:
     <<: *tg-client
@@ -194,6 +210,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client10:
     <<: *tg-client
@@ -212,6 +230,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
    
   tg-client12:
     <<: *tg-client
@@ -230,6 +250,8 @@ services:
     depends_on:
       db_seed:
         condition: service_completed_successfully
+      database:
+        condition: service_healthy
 
 volumes:
   postgres-db-volume:
