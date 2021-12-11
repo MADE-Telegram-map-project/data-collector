@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "Channels" (
     "link" text NOT NULL,
     "about" text NOT NULL,
     -- with timezone
-    "date" time with time zone NOT NULL,
+    "date" timestamp with time zone NOT NULL,
     "participants_count" int NOT NULL,
     -- default 0
     "total_photos" int NOT NULL DEFAULT 0,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS "Messages" (
     "channel_id" bigint NOT NULL,
     "message" text NOT NULL,
     -- with time
-    "date" time with time zone NOT NULL,
+    "date" timestamp  with time zone NOT NULL,
     "views" int NOT NULL,
     "forwards" int NOT NULL DEFAULT 0,
     -- default 0
@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "Replies" (
     "channel_id" bigint NOT NULL,
     "message" text NOT NULL,
     -- with timezone
-    "date" time with time zone NOT NULL,
+    "date" timestamp with time zone NOT NULL,
     "user_id" bigint NOT NULL,
     CONSTRAINT "pk_replies" PRIMARY KEY ("id"),
     FOREIGN KEY ("message_id", "channel_id") REFERENCES "Messages" ("message_id", "channel_id") ON DELETE CASCADE
